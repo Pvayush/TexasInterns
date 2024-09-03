@@ -1,30 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import moment from 'moment';
 import { FaLocationArrow, FaBriefcase, FaCalendarAlt } from 'react-icons/fa';
-import { useDispatch } from 'react-redux';
 import Wrapper from '../assets/wrappers/Job';
-import { deleteJob, setEditJob } from '../features/job/jobSlice';
 
-const Job = ({ _id, position, company, jobLocation, jobType, createdAt, status }) => {
-  const dispatch = useDispatch();
+// Simulate fetching demo jobs from localStorage
+const fetchDemoJobs = () => {
+  const demoJobs = JSON.parse(localStorage.getItem('demoJobs')) || [];
+  return demoJobs;
+};
 
+// Simulate updating demo jobs in localStorage
+const updateDemoJobs = (jobs) => {
+  localStorage.setItem('demoJobs', JSON.stringify(jobs));
+};
+
+const Job = ({ _id, position, company, jobLocation, jobType, createdAt, status, setJobs }) => {
   const date = moment(createdAt).format('MMM Do, YYYY');
 
   const handleEdit = () => {
-    dispatch(
-      setEditJob({
-        editJobId: _id,
-        position,
-        company,
-        jobLocation,
-        jobType,
-        status,
-      })
-    );
+    const demoJobs = fetchDemoJobs();
+    const jobIndex = demoJobs.findIndex((job) => job._id === _id);
+    if (jobIndex > -1) {
+      const editedJob = { ...demoJobs[jobIndex], position, company, jobLocation, jobType, status };
+      demoJobs[jobIndex] = editedJob;
+      updateDemoJobs(demoJobs);
+      setJobs(demoJobs); // Update the local state
+    }
   };
 
   const handleDelete = () => {
-    dispatch(deleteJob(_id));
+    const demoJobs = fetchDemoJobs();
+    const updatedJobs = demoJobs.filter((job) => job._id !== _id);
+    updateDemoJobs(updatedJobs);
+    setJobs(updatedJobs); // Update the local state
   };
 
   return (
