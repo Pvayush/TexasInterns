@@ -7,16 +7,20 @@ applications:
           commands:
             - npm install  # Install backend dependencies
         build:
-          commands:
-            - npm run build  # Run any build steps if needed, or remove this line if not needed
+          commands: []  # No build step needed for backend
       artifacts:
         baseDirectory: .
         files:
           - '**/*'
       cache:
         paths:
-          - node_modules/**/*
-          
+          - backend/node_modules/**/*
+    start:
+      phases:
+        postBuild:
+          commands:
+            - npm start  # Start the backend server
+
   - appRoot: frontend
     frontend:
       phases:
@@ -25,14 +29,11 @@ applications:
             - npm install  # Install frontend dependencies
         build:
           commands:
-            - npm run build  # Build the frontend for production
+            - npm run build  # Build the frontend
       artifacts:
-        baseDirectory: build
+        baseDirectory: build  # Specify build output directory
         files:
           - '**/*'
       cache:
         paths:
-          - node_modules/**/*
-    start:
-      commands:
-        - npm start  # This command starts your frontend if necessary
+          - frontend/node_modules/**/*
