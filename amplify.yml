@@ -5,11 +5,10 @@ applications:
       phases:
         preBuild:
           commands:
-            - cd backend
-            - npm install
+            - npm install  # Install backend dependencies
         build:
           commands:
-            - npm run build
+            - npm run build  # Run any build steps if needed, or remove this line if not needed
       artifacts:
         baseDirectory: .
         files:
@@ -23,11 +22,10 @@ applications:
       phases:
         preBuild:
           commands:
-            - cd frontend
-            - npm install
+            - npm install  # Install frontend dependencies
         build:
           commands:
-            - npm run build
+            - npm run build  # Build the frontend for production
       artifacts:
         baseDirectory: build
         files:
@@ -35,3 +33,6 @@ applications:
       cache:
         paths:
           - node_modules/**/*
+    start:
+      commands:
+        - npm start  # This command starts your frontend if necessary
