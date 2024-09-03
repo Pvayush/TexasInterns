@@ -1,36 +1,34 @@
-version: 1
-applications:
-  - appRoot: backend
-    appBackend:
-      phases:
-        preBuild:
-          commands:
-            - npm install  # Install backend dependencies
-        build:
-          commands:
-            - npm run start  # Start the backend server
-      artifacts:
-        # No artifacts for the backend since it's a server-side application
-        baseDirectory: /
-        files:
-          - '**/*'
-      cache:
-        paths:
-          - backend/node_modules/**/*  # Cache dependencies for faster builds
-
-  - appRoot: frontend  # Define frontend app root directory
-    frontend:
-      phases:
-        preBuild:
-          commands:
-            - npm install  # Install frontend dependencies
-        build:
-          commands:
-            - npm run build  # Build the frontend application
-      artifacts:
-        baseDirectory: build  # The build directory for the frontend app
-        files:
-          - '**/*'
-      cache:
-        paths:
-          - frontend/node_modules/**/*  # Cache dependencies for faster builds
+# version: 1
+# applications:
+#   - appRoot: backend
+#     appBackend:
+#       phases:
+#         preBuild:
+#           commands:
+#             - npm install
+#         build:
+#           commands:
+#             - npm run start
+#       artifacts:
+#         baseDirectory: /
+#         files:
+#           - "**/*"
+#       cache:
+#         paths:  
+#           - backend/node_modules/**/*
+#   - appRoot: frontend
+#     frontend:
+#       phases:
+#         preBuild:
+#           commands:
+#             - npm install
+#         build:
+#           commands:
+#             - npm run build
+#       artifacts:
+#         baseDirectory: build
+#         files:
+#           - "**/*"
+#       cache:
+#         paths:
+#           - frontend/node_modules/**/*
