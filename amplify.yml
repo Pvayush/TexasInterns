@@ -5,6 +5,7 @@ applications:
       phases:
         preBuild:
           commands:
+            - cd backend
             - npm install
         build:
           commands:
@@ -16,12 +17,13 @@ applications:
       cache:
         paths:
           - node_modules/**/*
-
-  - appRoot: .
+          
+  - appRoot: frontend
     frontend:
       phases:
         preBuild:
           commands:
+            - cd frontend
             - npm install
         build:
           commands:
