@@ -114,8 +114,9 @@ app.get('/api/jobs', authMiddleware, async (req, res) => { // Apply authMiddlewa
 });
 
 // Start the server
-const PORT = process.env.PORT || 5000; // Define PORT properly
+const PORT = process.env.PORT || 8080;
+
 
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`); // This will log for debugging
+  console.log(`Server is running on port ${PORT}`);  
 });

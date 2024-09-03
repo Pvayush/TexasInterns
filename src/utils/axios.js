@@ -2,8 +2,10 @@ import axios from 'axios';
 import { clearStore } from '../features/user/userSlice';
 import { getUserFromLocalStorage } from './localStorage';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 const customFetch = axios.create({
-  baseURL: 'http://localhost:5000/api/v1',
+  baseURL: API_URL,
 });
 
 customFetch.interceptors.request.use((config) => {
