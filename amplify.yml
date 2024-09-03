@@ -1,37 +1,35 @@
 version: 1
 applications:
-  # Backend Application
   - appRoot: backend
     backend:
       phases:
         preBuild:
           commands:
-            - npm install  # Install backend dependencies
+            - npm install
         build:
           commands:
-            - npm start  # Start the backend server
-    artifacts:
-      baseDirectory: .
-      files:
-        - '**/*'
-    cache:
-      paths:
-        - node_modules/**/*  # Cache backend node_modules
+            - npm run build
+      artifacts:
+        baseDirectory: .
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - node_modules/**/*
 
-  # Frontend Application
-  - appRoot: frontend
+  - appRoot: .
     frontend:
       phases:
         preBuild:
           commands:
-            - npm install  # Install frontend dependencies
+            - npm install
         build:
           commands:
-            - npm run build  # Build the frontend React app
-    artifacts:
-      baseDirectory: build  # Output directory for the built files
-      files:
-        - '**/*'
-    cache:
-      paths:
-        - node_modules/**/*  # Cache frontend node_modules
+            - npm run build
+      artifacts:
+        baseDirectory: build
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - node_modules/**/*
