@@ -1,34 +1,27 @@
-# version: 1
-# applications:
-#   - appRoot: backend
-#     appBackend:
-#       phases:
-#         preBuild:
-#           commands:
-#             - npm install
-#         build:
-#           commands:
-#             - npm run start
-#       artifacts:
-#         baseDirectory: /
-#         files:
-#           - "**/*"
-#       cache:
-#         paths:  
-#           - backend/node_modules/**/*
-#   - appRoot: frontend
-#     frontend:
-#       phases:
-#         preBuild:
-#           commands:
-#             - npm install
-#         build:
-#           commands:
-#             - npm run build
-#       artifacts:
-#         baseDirectory: build
-#         files:
-#           - "**/*"
-#       cache:
-#         paths:
-#           - frontend/node_modules/**/*
+version: 1
+backend:
+  phases:
+    preBuild:
+      commands:
+        - cd backend
+        - npm install
+    build:
+      commands:
+        - npm run build
+
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - cd frontend
+        - npm install
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: build  
+    files:
+      - "**/*"
+  cache:
+    paths:
+      - frontend/node_modules/**/*
