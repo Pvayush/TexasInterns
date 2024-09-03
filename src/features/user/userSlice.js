@@ -28,7 +28,7 @@ export const registerUser = createAsyncThunk(
 export const loginUser = createAsyncThunk(
   'user/loginUser',
   async (user, thunkAPI) => {
-    return loginUserThunk('/auth/login', user, thunkAPI);
+    return loginUserThunk('http://localhost:5000/api/login', user, thunkAPI);
   }
 );
 
@@ -38,7 +38,9 @@ export const updateUser = createAsyncThunk(
     return updateUserThunk('/auth/updateUser', user, thunkAPI);
   }
 );
+
 export const clearStore = createAsyncThunk('user/clearStore', clearStoreThunk);
+
 const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -53,6 +55,12 @@ const userSlice = createSlice({
       if (payload) {
         toast.success(payload);
       }
+    },
+    setDemoUser: (state) => {
+      const demoUser = { name: 'Demo User', email: 'demo@user.com' };  // Simplified Demo User
+      state.user = demoUser;
+      addUserToLocalStorage(demoUser);
+      toast.success('Logged in as Demo User');
     },
   },
   extraReducers: {
@@ -78,7 +86,6 @@ const userSlice = createSlice({
       state.isLoading = false;
       state.user = user;
       addUserToLocalStorage(user);
-
       toast.success(`Welcome Back ${user.name}`);
     },
     [loginUser.rejected]: (state, { payload }) => {
@@ -93,8 +100,7 @@ const userSlice = createSlice({
       state.isLoading = false;
       state.user = user;
       addUserToLocalStorage(user);
-
-      toast.success(`User Updated!`);
+      toast.success('User Updated!');
     },
     [updateUser.rejected]: (state, { payload }) => {
       state.isLoading = false;
@@ -106,5 +112,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { toggleSidebar, logoutUser } = userSlice.actions;
+export const { toggleSidebar, logoutUser, setDemoUser } = userSlice.actions;
 export default userSlice.reducer;

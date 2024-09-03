@@ -1,5 +1,5 @@
+// App.js
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-
 import { Landing, Error, Register, ProtectedRoute } from './pages';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -10,12 +10,20 @@ import {
   Stats,
   SharedLayout,
 } from './pages/dashboard';
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Default route set to landing page */}
+        <Route path='/' element={<Landing />} />
+
+        {/* Register route */}
+        <Route path='register' element={<Register />} />
+
+        {/* Protected Routes for Dashboard */}
         <Route
-          path='/'
+          path='/dashboard'
           element={
             <ProtectedRoute>
               <SharedLayout />
@@ -27,8 +35,8 @@ function App() {
           <Route path='add-job' element={<AddJob />} />
           <Route path='profile' element={<Profile />} />
         </Route>
-        <Route path='landing' element={<Landing />} />
-        <Route path='register' element={<Register />} />
+
+        {/* Error page route */}
         <Route path='*' element={<Error />} />
       </Routes>
       <ToastContainer position='top-center' />

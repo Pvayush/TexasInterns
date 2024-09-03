@@ -25,6 +25,7 @@ function Register() {
 
     setValues({ ...values, [name]: value });
   };
+
   const onSubmit = (e) => {
     e.preventDefault();
     const { name, email, password, isMember } = values;
@@ -42,19 +43,39 @@ function Register() {
   const toggleMember = () => {
     setValues({ ...values, isMember: !values.isMember });
   };
+
+// Register.js
+const handleDemoUser = () => {
+  const demoUser = {
+    name: 'Demo User',
+    email: 'demoUser@test.com',
+    password: 'demopassword',
+  };
+
+  // Save demo user to localStorage
+  localStorage.setItem('user', JSON.stringify(demoUser));
+
+  // Simulate setting user in Redux state and redirecting
+  dispatch(loginUser(demoUser));  // Directly set demo user in Redux state
+  toast.success('Logged in as Demo User');
+  setTimeout(() => {
+    navigate('/dashboard');  // Redirect to the dashboard after login
+  }, 1000);
+};
+
+
   useEffect(() => {
     if (user) {
       setTimeout(() => {
-        navigate('/');
+        navigate('/dashboard');  // Redirect to the dashboard after login
       }, 2000);
     }
-  }, [user]);
-  return (
+  }, [user, navigate]);
 
+  return (
     <Wrapper className='full-page'>
       <form className='form' onSubmit={onSubmit}>
         <h3>{values.isMember ? 'Texas Interns Register' : 'Texas Interns Login'}</h3>
-        {/* name field */}
         {!values.isMember && (
           <FormRow
             type='text'
@@ -63,14 +84,12 @@ function Register() {
             handleChange={handleChange}
           />
         )}
-        {/* email field */}
         <FormRow
           type='email'
           name='email'
           value={values.email}
           handleChange={handleChange}
         />
-        {/* password field */}
         <FormRow
           type='password'
           name='password'
@@ -84,11 +103,7 @@ function Register() {
           type='button'
           className='btn btn-block btn-hipster'
           disabled={isLoading}
-          onClick={() =>
-            dispatch(
-              loginUser({ email: 'testUser@test.com', password: 'secret' })
-            )
-          }
+          onClick={handleDemoUser}  // Updated for demo user
         >
           {isLoading ? 'loading...' : 'demo app'}
         </button>
@@ -102,4 +117,5 @@ function Register() {
     </Wrapper>
   );
 }
+
 export default Register;

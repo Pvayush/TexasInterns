@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
-import { getAllJobsThunk, showStatsThunk } from './allJobsThunk';
+import { getAllJobsThunk } from './allJobsThunk';
+import customFetch from '../../utils/axios'; // Make sure this path is correct and `axios` is set up properly.
 
 const initialFiltersState = {
   search: '',
@@ -21,9 +22,38 @@ const initialState = {
   ...initialFiltersState,
 };
 
+// Thunks for fetching jobs
 export const getAllJobs = createAsyncThunk('allJobs/getJobs', getAllJobsThunk);
 
-export const showStats = createAsyncThunk('allJobs/showStats', showStatsThunk);
+// Thunk for showing statistics with demo user check
+export const showStats = createAsyncThunk('allJobs/showStats', async (_, thunkAPI) => {
+  const { user } = thunkAPI.getState().user;
+
+  // Check if the current user is a demo user
+  if (user.email === 'demoUser@test.com') {
+    // Return mock data for the demo user
+    return {
+      defaultStats: {
+        pending: 2,
+        interview: 3,
+        declined: 1,
+      },
+      monthlyApplications: [
+        { date: '2024-01', count: 2 },
+        { date: '2024-02', count: 3 },
+        { date: '2024-03', count: 1 },
+      ],
+    };
+  }
+
+  // Proceed with the API call for regular users
+  try {
+    const resp = await customFetch.get('/jobs/stats');
+    return resp.data;
+  } catch (error) {
+    return thunkAPI.rejectWithValue('There was an error fetching stats');
+  }
+});
 
 const allJobsSlice = createSlice({
   name: 'allJobs',
@@ -36,7 +66,7 @@ const allJobsSlice = createSlice({
       state.isLoading = false;
     },
     handleChange: (state, { payload: { name, value } }) => {
-      state.page = 1;
+      state.page = 1; // Reset to the first page when filters change
       state[name] = value;
     },
     clearFilters: (state) => {
@@ -53,25 +83,25 @@ const allJobsSlice = createSlice({
     },
     [getAllJobs.fulfilled]: (state, { payload }) => {
       state.isLoading = false;
-      state.jobs = payload.jobs;
-      state.numOfPages = payload.numOfPages;
-      state.totalJobs = payload.totalJobs;
+      state.jobs = payload.jobs; // Update jobs list
+      state.numOfPages = payload.numOfPages; // Total number of pages
+      state.totalJobs = payload.totalJobs; // Total number of jobs
     },
     [getAllJobs.rejected]: (state, { payload }) => {
       state.isLoading = false;
-      toast.error(payload);
+      toast.error(payload); // Show error message
     },
     [showStats.pending]: (state) => {
       state.isLoading = true;
     },
     [showStats.fulfilled]: (state, { payload }) => {
       state.isLoading = false;
-      state.stats = payload.defaultStats;
-      state.monthlyApplications = payload.monthlyApplications;
+      state.stats = payload.defaultStats; // Update stats
+      state.monthlyApplications = payload.monthlyApplications; // Update monthly applications
     },
     [showStats.rejected]: (state, { payload }) => {
       state.isLoading = false;
-      toast.error(payload);
+      toast.error(payload); // Show error message
     },
   },
 });

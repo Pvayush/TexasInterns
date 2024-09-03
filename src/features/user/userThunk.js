@@ -12,10 +12,14 @@ export const registerUserThunk = async (url, user, thunkAPI) => {
 };
 
 export const loginUserThunk = async (url, user, thunkAPI) => {
+  console.log('URL:', url); 
+  console.log('User Payload:', user);  
   try {
     const resp = await customFetch.post(url, user);
+    console.log('Response:', resp.data);  
     return resp.data;
   } catch (error) {
+    console.error('Error:', error.response.data.msg);  
     return thunkAPI.rejectWithValue(error.response.data.msg);
   }
 };

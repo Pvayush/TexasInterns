@@ -9,6 +9,7 @@ import {
   editJob,
 } from '../../features/job/jobSlice';
 import { useEffect } from 'react';
+
 const AddJob = () => {
   const {
     isLoading,
@@ -24,9 +25,9 @@ const AddJob = () => {
   } = useSelector((store) => store.job);
   const { user } = useSelector((store) => store.user);
   const dispatch = useDispatch();
+
   const handleSubmit = (e) => {
     e.preventDefault();
-
     if (!position || !company || !jobLocation) {
       toast.error('Please fill out all fields');
       return;
@@ -65,21 +66,18 @@ const AddJob = () => {
       <form className='form'>
         <h3>{isEditing ? 'edit internship' : 'add internship'}</h3>
         <div className='form-center'>
-          {/* position */}
           <FormRow
             type='text'
             name='position'
             value={position}
             handleChange={handleJobInput}
           />
-          {/* company */}
           <FormRow
             type='text'
             name='company'
             value={company}
             handleChange={handleJobInput}
           />
-          {/* jobLocation */}
           <FormRow
             type='text'
             name='jobLocation'
@@ -87,14 +85,12 @@ const AddJob = () => {
             value={jobLocation}
             handleChange={handleJobInput}
           />
-          {/* status */}
           <FormRowSelect
             name='status'
             value={status}
             handleChange={handleJobInput}
             list={statusOptions}
           />
-          {/* job type*/}
           <FormRowSelect
             name='jobType'
             labelText='job type'
@@ -124,4 +120,5 @@ const AddJob = () => {
     </Wrapper>
   );
 };
+
 export default AddJob;
