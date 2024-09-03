@@ -1,22 +1,37 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const User = require('./models/User');  // Import User model
-const Job = require('./models/Job');    // Import Job model
+const jwt = require('jsonwebtoken');
+const User = require('./models/User');  
+const Job = require('./models/Job');    
 
-dotenv.config();
+dotenv.config();  // Load environment variables
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
 // Middleware to parse JSON
 app.use(express.json());
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGO_URI, {
-})
+mongoose.connect(process.env.MONGO_URI)  // Use remote MongoDB URI from environment variables
   .then(() => console.log('Connected to MongoDB'))
   .catch((err) => console.error('Error connecting to MongoDB:', err));
+
+  //Middleware for Authentication
+  const authMiddleware = async (req, res, next) => {
+    const token = req.header('Authorization')?.replace('Bearer ', '');
+    if (!token) {
+      return res.status(401).json({ message: 'Authentication required' });
+    }
+    
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      req.user = await User.findById(decoded.userId);
+      next();
+    } catch (error) {
+      res.status(401).json({ message: 'Invalid Token' });
+    }
+  };
 
 // Basic route
 app.get('/', (req, res) => {
@@ -50,11 +65,20 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-// Route to add a new job
-app.post('/api/jobs', async (req, res) => {
-  const { company, position, status } = req.body;
+// Route to add a new job (protected route)
+app.post('/api/jobs', authMiddleware, async (req, res) => {  // Apply authMiddleware
+  const { company, position, status, jobLocation, jobType } = req.body;
+
   try {
-    const newJob = new Job({ company, position, status });
+    const newJob = new Job({ 
+      company, 
+      position, 
+      status, 
+      jobLocation, 
+      jobType, 
+      createdBy: req.user._id  // Set createdBy from authenticated user
+    });
+    
     await newJob.save();
     res.status(201).json({ message: 'Job added successfully', job: newJob });
   } catch (error) {
@@ -62,10 +86,10 @@ app.post('/api/jobs', async (req, res) => {
   }
 });
 
-// Route to fetch all jobs
-app.get('/api/jobs', async (req, res) => {
+// Route to fetch all jobs (protected route)
+app.get('/api/jobs', authMiddleware, async (req, res) => {  // Apply authMiddleware
   try {
-    const jobs = await Job.find({});
+    const jobs = await Job.find({ createdBy: req.user._id });  // Fetch jobs created by the authenticated user
     res.status(200).json({ jobs });
   } catch (error) {
     res.status(500).json({ message: 'Error fetching jobs', error: error.message });
@@ -73,6 +97,8 @@ app.get('/api/jobs', async (req, res) => {
 });
 
 // Start the server
+const PORT = process.env.PORT || 5000;  // Define PORT properly
+
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);  // This will log for debugging
 });
