@@ -18,7 +18,7 @@ const Landing = () => {
             Texas Interns is an app that allows UT Austin CS/Engineering students to keep 
             track of their many internship processes at various companies
             and organizations all in one space. If you have any issues with this 
-            app or reccomendations/criticisms, please let me know at pvayush@utexas.edu Blash blash blah
+            app or reccomendations/criticisms, please let me know at pvayush@utexas.edu
 
           </p>
           <p>
