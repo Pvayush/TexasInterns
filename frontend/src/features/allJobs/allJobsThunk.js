@@ -3,7 +3,7 @@ import customFetch, { checkForUnauthorizedResponse } from '../../utils/axios';
 
 export const getAllJobsThunk = async (_, thunkAPI) => {
   try {
-    const resp = await customFetch.get('/api/jobs');
+    const resp = await customFetch.get('/jobs');
     return resp.data;
   } catch (error) {
     return checkForUnauthorizedResponse(error, thunkAPI);

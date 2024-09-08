@@ -1,12 +1,14 @@
-import Wrapper from '../assets/wrappers/Job'; // Correct path for the styled component
+import Wrapper from '../assets/wrappers/Job'; 
 import { FaLocationArrow, FaBriefcase, FaCalendarAlt } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
-import JobInfo from './JobInfo'; // Ensure the path to JobInfo is correct
+import { useNavigate } from 'react-router-dom';
+import JobInfo from './JobInfo'; 
 import moment from 'moment';
-import { deleteJob, setEditJob } from '../features/job/jobSlice'; // Correct import path for jobSlice
+import { deleteJob, setEditJob } from '../features/job/jobSlice'; 
 
 const Job = ({ _id, position, company, jobLocation, jobType, createdAt, status }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const date = moment(createdAt).format('MMM Do, YYYY');
 
@@ -23,6 +25,8 @@ const Job = ({ _id, position, company, jobLocation, jobType, createdAt, status }
       jobType,
       status,
     }));
+
+    navigate('/dashboard/add-job');
   };
 
   return (
