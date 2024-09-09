@@ -40,8 +40,7 @@ export const loginUser = createAsyncThunk(
   async (user, thunkAPI) => {
     try {
       const response = await axios.post(`${process.env.REACT_APP_API_URL}/login`, user);
-      const { token, user: loggedInUser } = response.data; // Assuming backend returns { user, token }
-      
+      const { token, user: loggedInUser } = response.data; 
       // Save user and token to localStorage
       addUserToLocalStorage({ ...loggedInUser, token });
       return { ...loggedInUser, token };
@@ -74,16 +73,6 @@ const userSlice = createSlice({
       if (payload) {
         toast.success(payload);
       }
-    },
-    setDemoUser: (state) => {
-      const demoUser = { 
-        name: 'Demo User', 
-        email: 'demo@user.com',
-        token: 'demo-token'  // Example demo token
-      };  
-      state.user = demoUser;
-      addUserToLocalStorage(demoUser);
-      toast.success('Logged in as Demo User');
     },
   },
   extraReducers: {

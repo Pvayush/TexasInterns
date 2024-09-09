@@ -46,28 +46,19 @@ function Register() {
 
 // Register.js
 const handleDemoUser = () => {
-  const demoUser = {
-    name: 'Demo User',
-    email: 'demoUser@test.com',
-    password: 'demopassword',
-  };
-
-  // Save demo user to localStorage
-  localStorage.setItem('user', JSON.stringify(demoUser));
-
-  // Simulate setting user in Redux state and redirecting
-  dispatch(loginUser(demoUser));  // Directly set demo user in Redux state
-  toast.success('Logged in as Demo User');
-  setTimeout(() => {
-    navigate('/dashboard');  // Redirect to the dashboard after login
-  }, 1000);
+  dispatch(
+    loginUser({
+      email: 'test@test.com',
+      password: 'test',
+    })
+  );
 };
 
 
   useEffect(() => {
     if (user) {
       setTimeout(() => {
-        navigate('/dashboard');  // Redirect to the dashboard after login
+        navigate('/dashboard');
       }, 2000);
     }
   }, [user, navigate]);
@@ -103,7 +94,7 @@ const handleDemoUser = () => {
           type='button'
           className='btn btn-block btn-hipster'
           disabled={isLoading}
-          onClick={handleDemoUser}  // Updated for demo user
+          onClick={handleDemoUser} 
         >
           {isLoading ? 'loading...' : 'demo app'}
         </button>
