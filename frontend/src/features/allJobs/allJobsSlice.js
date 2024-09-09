@@ -31,7 +31,7 @@ export const showStats = createAsyncThunk('allJobs/showStats', async (_, thunkAP
 
   // Proceed with the API call for regular users
   try {
-    const resp = await customFetch.get('/jobs/stats');
+    const resp = await customFetch.get('jobs/stats');
     return resp.data;
   } catch (error) {
     return thunkAPI.rejectWithValue('There was an error fetching stats');

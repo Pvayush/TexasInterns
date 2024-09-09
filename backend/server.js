@@ -166,7 +166,7 @@ app.patch('/api/jobs/:id', authMiddleware, async (req, res) => { // Apply authMi
   }
 });
 
-app.get('api/jobs/stats', authMiddleware, async (req, res) => {
+app.get('/api/jobs/stats', authMiddleware, async (req, res) => {
   try {
     
     const stats = await Job.aggregate([
