@@ -166,6 +166,37 @@ app.patch('/api/jobs/:id', authMiddleware, async (req, res) => { // Apply authMi
   }
 });
 
+app.get('api/jobs/stats', authMiddleware, async (req, res) => {
+  try {
+    
+    const stats = await Job.aggregate([
+      { $match: { createdBy: req.user._id } },  
+      { $group: { _id: '$status', count: { $sum: 1 } } } 
+    ]);
+
+    const defaultStats = stats.reduce((acc, stat) => {
+      acc[stat._id] = stat.count;  
+      return acc;
+    }, {});
+
+   
+    const monthlyApplications = await Job.aggregate([
+      { $match: { createdBy: req.user._id } },  
+      {
+        $group: {
+          _id: { year: { $year: '$createdAt' }, month: { $month: '$createdAt' } },
+          count: { $sum: 1 }
+        },
+      },
+      { $sort: { '_id.year': -1, '_id.month': -1 } },  // Sort by year and month in descending order
+      { $limit: 6 },  // Get the last 6 months of data
+    ]);
+
+    res.status(200).json({ defaultStats, monthlyApplications });
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching stats', error: error.message });
+  }
+});
 
 
 // Start the server

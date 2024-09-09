@@ -29,23 +29,6 @@ export const getAllJobs = createAsyncThunk('allJobs/getJobs', getAllJobsThunk);
 export const showStats = createAsyncThunk('allJobs/showStats', async (_, thunkAPI) => {
   const { user } = thunkAPI.getState().user;
 
-  // Check if the current user is a demo user
-  if (user.email === 'demoUser@test.com') {
-    // Return mock data for the demo user
-    return {
-      defaultStats: {
-        pending: 2,
-        interview: 3,
-        declined: 1,
-      },
-      monthlyApplications: [
-        { date: '2024-01', count: 2 },
-        { date: '2024-02', count: 3 },
-        { date: '2024-03', count: 1 },
-      ],
-    };
-  }
-
   // Proceed with the API call for regular users
   try {
     const resp = await customFetch.get('/jobs/stats');
