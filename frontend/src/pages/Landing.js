@@ -19,7 +19,6 @@ const Landing = () => {
             track of their many internship processes at various companies
             and organizations all in one space. If you have any issues with this 
             app or reccomendations/criticisms, please let me know at pvayush@utexas.edu
-
           </p>
           <p>
             Try the demo app by clicking 'Login/Register'!
